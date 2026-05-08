@@ -2,15 +2,17 @@ import { Flame, ListChecks, Loader2, Medal, Timer } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { PageHeader } from "../../components/ui/PageHeader";
 import { useAuth } from "../../contexts/AuthContext";
+import { listTodayFocusSessions } from "../../services/focusSessionService";
 import { listTasks } from "../../services/taskService";
-import type { Task } from "../../types/database";
+import type { FocusSession, Task } from "../../types/database";
 import styles from "./styles.module.css";
 
 export function Dashboard() {
   const { profile } = useAuth();
 
   const [tasks, setTasks] = useState<Task[]>([]);
-  const [loadingTasks, setLoadingTasks] = useState(true);
+  const [focusSessions, setFocusSessions] = useState<FocusSession[]>([]);
+  const [loadingData, setLoadingData] = useState(true);
 
   const currentXp = profile?.xp ?? 0;
   const currentLevel = profile?.level ?? 1;
@@ -34,28 +36,41 @@ export function Dashboard() {
     [tasks]
   );
 
+  const focusMinutesToday = useMemo(
+    () =>
+      focusSessions.reduce(
+        (total, session) => total + session.duration_minutes,
+        0
+      ),
+    [focusSessions]
+  );
+
   useEffect(() => {
     let isMounted = true;
 
-    async function loadDashboardTasks() {
+    async function loadDashboardData() {
       try {
-        setLoadingTasks(true);
+        setLoadingData(true);
 
-        const taskList = await listTasks();
+        const [taskList, todaySessions] = await Promise.all([
+          listTasks(),
+          listTodayFocusSessions(),
+        ]);
 
         if (isMounted) {
           setTasks(taskList);
+          setFocusSessions(todaySessions);
         }
       } catch (error) {
-        console.error("Erro ao carregar tarefas do dashboard:", error);
+        console.error("Erro ao carregar dados do dashboard:", error);
       } finally {
         if (isMounted) {
-          setLoadingTasks(false);
+          setLoadingData(false);
         }
       }
     }
 
-    loadDashboardTasks();
+    loadDashboardData();
 
     return () => {
       isMounted = false;
@@ -83,7 +98,7 @@ export function Dashboard() {
     },
     {
       label: "Tarefas abertas",
-      value: loadingTasks ? "..." : String(openTasksCount),
+      value: loadingData ? "..." : String(openTasksCount),
       description: `${completedTasksCount} tarefa${completedTasksCount === 1 ? "" : "s"} concluída${completedTasksCount === 1 ? "" : "s"}.`,
       icon: ListChecks,
     },
@@ -129,17 +144,17 @@ export function Dashboard() {
 
       <section className={styles.panel}>
         <div>
-          <h2>Próximo passo recomendado</h2>
+          <h2>Resumo de foco de hoje</h2>
           <p>
-            Comece por uma tarefa simples e use uma sessão de foco curta para
-            gerar progresso sem sobrecarga.
+            Hoje você registrou <strong>{focusMinutesToday} minuto{focusMinutesToday === 1 ? "" : "s"}</strong> de foco.
+            Continue com sessões pequenas para manter constância sem sobrecarga.
           </p>
         </div>
 
-        {loadingTasks ? (
+        {loadingData ? (
           <div className={styles.loadingHint}>
             <Loader2 size={18} />
-            Carregando tarefas...
+            Carregando dados...
           </div>
         ) : null}
       </section>
