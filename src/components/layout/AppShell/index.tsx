@@ -1,5 +1,15 @@
-import { Brain, CheckSquare, Gift, LayoutDashboard, Timer } from "lucide-react";
-import { NavLink, Outlet } from "react-router-dom";
+import {
+  Brain,
+  CheckSquare,
+  Gift,
+  LayoutDashboard,
+  LogOut,
+  Timer,
+} from "lucide-react";
+import { NavLink, Outlet, useNavigate } from "react-router-dom";
+import { Button } from "../../ui/Button";
+import { useAuth } from "../../../contexts/AuthContext";
+import { signOut } from "../../../services/authService";
 import styles from "./styles.module.css";
 
 const navigationItems = [
@@ -25,7 +35,32 @@ const navigationItems = [
   },
 ];
 
+function getInitials(name: string) {
+  const words = name.trim().split(" ").filter(Boolean);
+
+  if (words.length === 0) {
+    return "DF";
+  }
+
+  if (words.length === 1) {
+    return words[0].slice(0, 2).toUpperCase();
+  }
+
+  return `${words[0][0]}${words[words.length - 1][0]}`.toUpperCase();
+}
+
 export function AppShell() {
+  const navigate = useNavigate();
+  const { profile, user } = useAuth();
+
+  const displayName = profile?.name || user?.email || "Usuário";
+  const initials = getInitials(displayName);
+
+  async function handleLogout() {
+    await signOut();
+    navigate("/login", { replace: true });
+  }
+
   return (
     <div className={styles.appShell}>
       <aside className={styles.sidebar}>
@@ -58,16 +93,23 @@ export function AppShell() {
             );
           })}
         </nav>
+
+        <div className={styles.sidebarFooter}>
+          <Button type="button" variant="ghost" onClick={handleLogout}>
+            <LogOut size={18} />
+            Sair
+          </Button>
+        </div>
       </aside>
 
       <div className={styles.mainArea}>
         <header className={styles.topbar}>
           <div>
             <span className={styles.eyebrow}>Bem-vindo</span>
-            <strong>Organize seu foco de forma leve.</strong>
+            <strong>{displayName}</strong>
           </div>
 
-          <div className={styles.userBadge}>JV</div>
+          <div className={styles.userBadge}>{initials}</div>
         </header>
 
         <main className={styles.content}>

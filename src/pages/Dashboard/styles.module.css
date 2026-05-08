@@ -1,3 +1,44 @@
+.progressPanel {
+  display: grid;
+  gap: 14px;
+  margin-bottom: 22px;
+  padding: 22px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background:
+    radial-gradient(circle at top left, rgba(108, 92, 231, 0.14), transparent 30%),
+    var(--color-surface);
+  box-shadow: var(--shadow-sm);
+}
+
+.progressPanel div:first-child {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.progressPanel span {
+  color: var(--color-muted);
+  font-weight: 800;
+}
+
+.progressPanel strong {
+  color: var(--color-primary);
+}
+
+.progressBar {
+  height: 12px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: var(--color-surface-soft);
+}
+
+.progressBar div {
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--color-primary), var(--color-secondary));
+}
+
 .grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -75,6 +116,12 @@
 }
 
 @media (max-width: 560px) {
+  .progressPanel div:first-child {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 6px;
+  }
+
   .grid {
     grid-template-columns: 1fr;
   }

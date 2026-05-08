@@ -66,6 +66,17 @@
   box-shadow: 0 0 0 4px rgba(108, 92, 231, 0.14);
 }
 
+.errorMessage {
+  margin: 0;
+  padding: 12px;
+  color: var(--color-danger);
+  border-radius: var(--radius-md);
+  background: rgba(214, 48, 49, 0.08);
+  font-size: 0.92rem;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
 .footerText {
   margin: 22px 0 0;
   color: var(--color-muted);
