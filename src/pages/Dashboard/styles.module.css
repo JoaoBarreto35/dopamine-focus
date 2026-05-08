@@ -126,3 +126,11 @@
     grid-template-columns: 1fr;
   }
 }
+.loadingHint {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  margin-top: 18px;
+  color: var(--color-muted);
+  font-weight: 800;
+}

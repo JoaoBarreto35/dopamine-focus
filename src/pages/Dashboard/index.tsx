@@ -1,10 +1,16 @@
-import { Flame, ListChecks, Medal, Timer } from "lucide-react";
+import { Flame, ListChecks, Loader2, Medal, Timer } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
 import { PageHeader } from "../../components/ui/PageHeader";
 import { useAuth } from "../../contexts/AuthContext";
+import { listTasks } from "../../services/taskService";
+import type { Task } from "../../types/database";
 import styles from "./styles.module.css";
 
 export function Dashboard() {
   const { profile } = useAuth();
+
+  const [tasks, setTasks] = useState<Task[]>([]);
+  const [loadingTasks, setLoadingTasks] = useState(true);
 
   const currentXp = profile?.xp ?? 0;
   const currentLevel = profile?.level ?? 1;
@@ -14,6 +20,47 @@ export function Dashboard() {
   const xpForNextLevel = currentLevel * 100;
   const xpProgress = currentXp - xpForCurrentLevel;
   const xpMissing = Math.max(0, xpForNextLevel - currentXp);
+
+  const openTasksCount = useMemo(
+    () =>
+      tasks.filter(
+        (task) => task.status !== "completed" && task.status !== "archived"
+      ).length,
+    [tasks]
+  );
+
+  const completedTasksCount = useMemo(
+    () => tasks.filter((task) => task.status === "completed").length,
+    [tasks]
+  );
+
+  useEffect(() => {
+    let isMounted = true;
+
+    async function loadDashboardTasks() {
+      try {
+        setLoadingTasks(true);
+
+        const taskList = await listTasks();
+
+        if (isMounted) {
+          setTasks(taskList);
+        }
+      } catch (error) {
+        console.error("Erro ao carregar tarefas do dashboard:", error);
+      } finally {
+        if (isMounted) {
+          setLoadingTasks(false);
+        }
+      }
+    }
+
+    loadDashboardTasks();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   const summaryCards = [
     {
@@ -36,8 +83,8 @@ export function Dashboard() {
     },
     {
       label: "Tarefas abertas",
-      value: "0",
-      description: "Na próxima fase vamos buscar tarefas reais.",
+      value: loadingTasks ? "..." : String(openTasksCount),
+      description: `${completedTasksCount} tarefa${completedTasksCount === 1 ? "" : "s"} concluída${completedTasksCount === 1 ? "" : "s"}.`,
       icon: ListChecks,
     },
   ];
@@ -88,6 +135,13 @@ export function Dashboard() {
             gerar progresso sem sobrecarga.
           </p>
         </div>
+
+        {loadingTasks ? (
+          <div className={styles.loadingHint}>
+            <Loader2 size={18} />
+            Carregando tarefas...
+          </div>
+        ) : null}
       </section>
     </>
   );
