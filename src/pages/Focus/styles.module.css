@@ -1,0 +1,52 @@
+.focusCard {
+  display: grid;
+  max-width: 620px;
+  margin: 0 auto;
+  padding: 42px;
+  text-align: center;
+  border: 1px solid var(--color-border);
+  border-radius: 32px;
+  background:
+    radial-gradient(circle at top, rgba(0, 184, 148, 0.18), transparent 34%),
+    var(--color-surface);
+  box-shadow: var(--shadow-md);
+}
+
+.focusCard span {
+  color: var(--color-muted);
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.focusCard strong {
+  display: block;
+  margin: 20px 0;
+  color: var(--color-primary);
+  font-size: clamp(4rem, 16vw, 7rem);
+  line-height: 1;
+}
+
+.focusCard p {
+  max-width: 420px;
+  margin: 0 auto;
+  color: var(--color-muted);
+  line-height: 1.6;
+}
+
+.actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-top: 28px;
+}
+
+@media (max-width: 640px) {
+  .focusCard {
+    padding: 28px 20px;
+  }
+
+  .actions {
+    flex-direction: column;
+  }
+}

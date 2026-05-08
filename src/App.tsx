@@ -1,10 +1,7 @@
+import { AppRoutes } from "./routes/AppRoutes";
+
 function App() {
-  return (
-    <main>
-      <h1>Dopamine Focus</h1>
-      <p>Aplicativo gamificado para foco, tarefas e organização.</p>
-    </main>
-  );
+  return <AppRoutes />;
 }
 
 export default App;
