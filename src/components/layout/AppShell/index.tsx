@@ -1,4 +1,5 @@
 import {
+  BarChart3,
   Brain,
   CheckSquare,
   Gift,
@@ -32,6 +33,11 @@ const navigationItems = [
     label: "Recompensas",
     path: "/rewards",
     icon: Gift,
+  },
+  {
+    label: "Validação",
+    path: "/admin/validation",
+    icon: BarChart3,
   },
 ];
 

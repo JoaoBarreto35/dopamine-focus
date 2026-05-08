@@ -57,3 +57,51 @@ export type UserAchievement = {
   achievement_id: string;
   unlocked_at: string;
 };
+export type PilotProfileGroup = "diagnosed_tdah" | "suspected_tdah";
+
+export type PilotAgeRange =
+  | "under_18"
+  | "18_24"
+  | "25_34"
+  | "35_44"
+  | "45_plus";
+
+export type PilotImprovementGroup =
+  | "large_improvement"
+  | "moderate_improvement"
+  | "no_improvement_or_dropout";
+
+export type PilotParticipant = {
+  id: string;
+  participant_code: string;
+  profile_group: PilotProfileGroup;
+  age_range: PilotAgeRange;
+  accepted_anonymous_participation: boolean;
+  created_at: string;
+};
+
+export type PilotFeedback = {
+  id: string;
+  participant_id: string;
+  days_observed: number;
+  initial_focus_score: number;
+  final_focus_score: number;
+  improvement_group: PilotImprovementGroup;
+  completed_observation: boolean;
+  qualitative_note: string;
+  created_at: string;
+};
+
+export type PilotFeedbackWithParticipant = PilotFeedback & {
+  participant: PilotParticipant;
+};
+
+export type PilotFeedbackSummary = {
+  total_participants: number;
+  large_improvement_count: number;
+  moderate_improvement_count: number;
+  no_improvement_or_dropout_count: number;
+  large_improvement_percentage: number;
+  moderate_improvement_percentage: number;
+  no_improvement_or_dropout_percentage: number;
+};

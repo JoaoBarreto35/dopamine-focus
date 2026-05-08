@@ -6,6 +6,7 @@ import { Login } from "../pages/Login";
 import { Register } from "../pages/Register";
 import { Rewards } from "../pages/Rewards";
 import { Tasks } from "../pages/Tasks";
+import { AdminValidation } from "../pages/AdminValidation";
 import { ProtectedRoute } from "./ProtectedRoute";
 
 export function AppRoutes() {
@@ -16,12 +17,14 @@ export function AppRoutes() {
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
 
+
       <Route element={<ProtectedRoute />}>
         <Route element={<AppShell />}>
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/tasks" element={<Tasks />} />
           <Route path="/focus" element={<Focus />} />
           <Route path="/rewards" element={<Rewards />} />
+          <Route path="/admin/validation" element={<AdminValidation />} />
         </Route>
       </Route>
 
